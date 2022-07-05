@@ -1,3 +1,4 @@
+<%@page import="member.MemberDTO"%>
 <%@page import="member.MemberDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -10,19 +11,35 @@
 <body>
 	save.jsp<br>
 	<%
+		request.setCharacterEncoding("utf-8");
+	
 		MemberDAO dao = new MemberDAO();
-		String id = request.getParameter("id");
-		String pwd = request.getParameter("pwd");
-		String name = request.getParameter("name");
-		String addr = request.getParameter("addr");
-		String tel = request.getParameter("tel");
-		int result = dao.saveMember(id, pwd, name, addr, tel);
-		if( result == 1) {
-			out.print("<script>alert('회원 저장 성공!!');location.href='login.jsp'</script>");
-			
-		}else {
-			out.print("<script>alert('회원 저장 실패!!');location.href='login.jsp'</script>");
-		}
-	%>
+		MemberDTO dto = new MemberDTO();
+		dto.setId( request.getParameter("id") ); //사용자가 입력한 값 저장
+		dto.setPwd( request.getParameter("pwd") );
+		dto.setName( request.getParameter("name") );
+		dto.setAddr( request.getParameter("addr") );
+		dto.setTel( request.getParameter("tel") );
+		
+		int result = dao.insert(dto);
+		if(result == 1) { %>
+			<script>
+				alert('회원가입 성공');
+				location.href='login.jsp';
+			</script>
+	<%	}else { %>
+			<script>
+				alert('회원가입 실패');
+				history.back(); /* 한단계 전으로 이동(이전 값이 유지됨) */
+			</script>			
+	<%	} %>
+	
+	<!-- 넘어온값 확인 -->
+	<%= request.getParameter("id") %>
+	<%= request.getParameter("pwd") %>
+	<%= request.getParameter("name") %>
+	<%= request.getParameter("addr") %>
+	<%= request.getParameter("tel") %>
+	
 </body>
 </html>

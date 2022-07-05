@@ -79,48 +79,79 @@ public class MemberDAO {
 		
 	}
 	
-	public int saveMember(String id, String pwd, String name, String addr, String tel) {
-		String sql = "insert into members(id, pwd, name, addr, tel) values (?,?,?,?,?)";
-		int result = 0;
+	public int insert(MemberDTO dto) {
+		System.out.println(dto.getId());
+		System.out.println(dto.getPwd());
+		System.out.println(dto.getName());
+		System.out.println(dto.getAddr());
+		System.out.println(dto.getTel());
 		
-			try {
-				ps = con.prepareStatement(sql);
-				
-				ps.setString(1, id);
-				ps.setString(2, pwd);
-				ps.setString(3, name);
-				ps.setString(4, addr);
-				ps.setString(5, tel);
-				
-				result = ps.executeUpdate();
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		String sql = "insert into members(id, pwd, name, addr, tel) values(?,?,?,?,?)"; //DB 컬럼 순서를 맞춰주어야 한다
+		int result = 0;
+		try {
+			ps = con.prepareStatement(sql); //명령어 전송하는 전송객체
 			
-			return result;
+			ps.setString(1, dto.getId()); //DB 순번대로 넣어줘어야 한다.
+			ps.setString(2, dto.getPwd());
+			ps.setString(3, dto.getName());
+			ps.setString(4, dto.getAddr());
+			ps.setString(5, dto.getTel());
+			
+			result = ps.executeUpdate(); //select를 제외한 나머지 값은 executeUpdate()를 사용 - 실패시 에러0, 성공시 1 값이 리턴됨
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
-	public MemberDTO getInfo(String id) {
-		String sql = "select * from members where id = ?";
-		MemberDTO dto = new MemberDTO();
+	public MemberDTO getU(String id) {
+		MemberDTO dto = null;
+		String sql = "select * from members where id ='" + id +"'"; //완성된 쿼리문
 		
 		try {
 			ps = con.prepareStatement(sql);
-			ps.setString(1, id);
 			rs = ps.executeQuery();
 			if(rs.next()) {
+				dto = new MemberDTO();
 				dto.setId(rs.getString("id"));
 				dto.setPwd(rs.getString("pwd"));
 				dto.setName(rs.getString("name"));
 				dto.setAddr(rs.getString("addr"));
 				dto.setTel(rs.getString("tel"));
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return dto;
+		return dto; //제대로 가져오면 객체값, 오류가 있으면 null값
+	}
+	
+	public void delete(String id) {
+		String sql = "delete from members where id = '" + id + "'";
+		try {
+			ps = con.prepareStatement(sql);
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//삭제시 실패:0, 성공:1
+	}
+	
+	public void update(MemberDTO dto) {
+		String sql = "update members set name=?, pwd=?, addr=?, tel=? where id=?";
+		try {
+			ps = con.prepareStatement(sql);
+			ps.setString(1, dto.getName());
+			ps.setString(2, dto.getPwd());
+			ps.setString(3, dto.getAddr());
+			ps.setString(4, dto.getTel());
+			ps.setString(5, dto.getId());
+			
+			ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

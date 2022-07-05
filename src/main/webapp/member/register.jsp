@@ -9,7 +9,7 @@
 <body>
 
 	<h2>회원 가입</h2>
-	<form id="fo" action="save.jsp" method="get">
+	<form id="fo" action="save.jsp" method="post">
 		<input type="text" name="id" id="id" placeholder="아이디"><br> <!-- id: 현재페이지 구분 용도 -->
 		
 		<input type="text" name="pwd" id="pwd1" placeholder="비밀번호"><br>

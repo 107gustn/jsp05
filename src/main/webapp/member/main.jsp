@@ -26,7 +26,7 @@
 		<tr>
 			<td><%= m.getId() %></td>
 			<td><%= m.getPwd() %></td>
-			<td><%= m.getName() %></td>
+			<td><a href="user_delete.jsp?id=<%= m.getId() %>"><%= m.getName() %></a></td>
 			<td><%= m.getAddr() %></td>
 			<td><%= m.getTel() %></td>
 		</tr>
